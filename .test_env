@@ -1,0 +1,224 @@
+#################################################################################
+#  
+# Some short handy scripts useful for quick troubelshooting and test tool execution.
+# 
+#################################################################################
+
+vdblist()
+{
+# HELP : Create sd list for vdbench profiles
+i=1
+multipath -l |awk '/Vexata/ {print $3}' |while read DN; do
+echo "sd=sd${i},lun=/dev/${DN},openflags=o_direct"
+((i++))
+done
+}
+
+iochk() 
+{
+# HELP : Generate IOSTAT output for devices with some activity
+SD=${1:-mp}
+[[ $SD == "mp" ]] && DEVLIST=$(dmsetup ls |awk '/^mpath/ {print $1}'|xargs) || DEVLIST=$(lsscsi |awk -F/ '/Vexata/ {print $NF}'|xargs)
+iostat -dxNzmc 5 ${DEVLIST}
+}
+
+fiolist()
+{
+# HELP : List device to be used with FIO command.
+multipath -l |awk '/Vexata/ {print "/dev/mapper/"$1}' | xargs |sed "s/ /:/g"
+}
+
+wwnlist()
+{
+# HELP : WWN List of all FC ports
+systool -c fc_host -A port_name |awk '/port_name/ {print substr($NF,4,16)}' | sed 's/.\{2\}/&:/g' | sed 's/:$//g'
+}
+
+ws()
+{
+# HELP : Status check of FC ports
+systool -c fc_host -A port_name -v |awk -F\= '/port_name|port_state|speed |Class Device =/ {print $NF}' | xargs -n 4
+}
+
+dlist()
+{
+# HELP : list the dm-X devices in one line
+DEVLIST=$(multipath -l -p multibus|awk '/Vexata|active r/ {print $3}')
+CNT=$(echo $DEVLIST|wc -c)
+[[ $CNT == 1 ]] && DEVLIST=$(lsscsi |awk -F\/ '/Vexata/ {print $NF}' | xargs)
+echo $DEVLIST
+}
+
+sdlist()
+{
+# HELP : list the sdX devices in one line
+lsscsi|awk -F\/  '/Vexata/ {print $NF}' | xargs
+}
+
+lstune ()
+{
+# HELP : Lists the values of all frequently tuned settings for devices.
+    for drivename in $(dlist) $(sdlist)
+    do
+	cat /sys/block/$drivename/queue/scheduler
+	cat /sys/block/$drivename/queue/add_random
+	cat /sys/block/$drivename/queue/rq_affinity
+	echo ":$drivename"
+    done | xargs -n 7| paste - - - 
+}
+
+tune_all()
+{
+# HELP : Set the recommended values to all frequently tuned settings for devices.
+    echo "Before ....." ; lstune
+    for drivename in $(dlist) $(sdlist)
+    do
+        echo noop > /sys/block/$drivename/queue/scheduler;
+        echo 0    > /sys/block/$drivename/queue/add_random;
+        echo 2    > /sys/block/$drivename/queue/rq_affinity;
+    done
+    echo "After ....." ; lstune
+}
+
+tune_random()
+{
+# HELP : Set the requested value to enable/disable entrophy on all vexata volumes(default:0).
+VAL=${1:-0}
+    echo "Before ....." ; lstune
+    for drivename in $(dlist) $(sdlist)
+    do
+        echo ${VAL} > /sys/block/$drivename/queue/add_random;
+    done
+    echo "After ....." ; lstune
+}
+
+tune_affinity()
+{
+# HELP : Set the requested affinity value to all vexata volumes (default:2).
+VAL=${1:-2}
+    echo "Before ....." ; lstune
+    for drivename in $(dlist) $(sdlist)
+    do
+        echo ${VAL} > /sys/block/$drivename/queue/rq_affinity;
+    done
+    echo "After ....." ; lstune
+}
+
+tune_nr()
+{
+# HELP : Increase / decrease the nr_requests on all vexata volumes (default:1024).
+VAL=${1:-1024}
+    echo "Before ....." ; lstune
+    for drivename in $(dlist)
+    do
+        echo ${VAL} > /sys/block/$drivename/queue/nr_requests;
+    done
+    echo "After ....." ; lstune
+}
+
+tune_sched()
+{
+# HELP : set I/O scheduler on all vexata volumes (default: noop)
+VAL=${1:-"noop"}
+    echo "Before ....." ; lstune
+    for drivename in $(dlist)
+    do
+        echo ${VAL} > /sys/block/$drivename/queue/scheduler;
+    done
+    echo "After ....." ; lstune
+}
+
+rescan_all()
+{
+# HELP : Rescan all scsi devices asoosiated with FC
+systool -c fc_host  |awk -F\" '/Class D/ {print $2}'| while read HN
+do
+echo $HN;timeout 120 echo "- - -" > /sys/class/scsi_host/$HN/scan
+done
+}
+
+rmdev()
+{
+# HELP : Remove stale device entries
+multipath -l | awk '/failed|faulty/ {print $3}' | while read DN
+do
+echo 1 > /sys/block/${DN}/device/delete
+done
+}
+
+mpconfig()
+{
+# HELP : List the effective multipath configuration.
+echo 'show config' | multipathd -k | less
+}
+
+vc()
+{
+# HELP : List the number of SD volumes and DM volumes.
+echo "Vexata SDs : $(lsscsi |grep Vexata|wc -l)"
+tf=$(multipath -ll)
+echo "Vexata DMs : $(echo "$tf" | grep Vexata |wc -l)"
+echo "$tf" | awk '/Vexata/ {print $3}' | while read mp; do echo "$mp : $(echo "$tf" | sed -n '/'${mp}'/,/^mpath/p' | awk '/^  \|-|^  `/ {print $0}' | wc -l)"; done
+}
+
+
+dl()
+{
+# HELP : list all dm-X devices with new-line. Usefull to pass on to test tools.
+multipath -l |awk '/Vexata/ {print "/dev/mapper/"$1}'
+}
+
+devlist()
+{
+# HELP : list all dm-X devices with full path name in single line. Usefull to pass on to test tools.
+multipath -l |awk '/Vexata/ {print "/dev/mapper/"$1}' |xargs |sed "s/ /,/g"
+}
+
+
+ver()
+{
+# HELP : Display the current OS version.
+awk -F= '/ID=/ {print $NF}' /etc/os-release| xargs| sed 's/ /-/g'
+}
+
+hbaver()
+{
+# HELP : Display HBA version installed on the system,
+lsmod |grep lpfc >/dev/null 2>&1 ; L=$?
+lsmod |grep qla2xxx >/dev/null 2>&1 ; Q=$?
+
+[[ $L -eq 0 ]] && modinfo lpfc | awk -F: '/description:/ {print $NF}'
+[[ $Q -eq 0 ]] && modinfo qla2xxx | awk -F: '/description:|^version:/ {print $NF}'|paste -s
+}
+
+check_interrupts()
+{
+# HELP : Check interrupt values on the system
+awk -F: '/lpfc/ {print $1}' /proc/interrupts | xargs -L1 -i cat /proc/irq/{}/smp_affinity
+}
+
+chdev_to()
+{
+# HELP : Change timeout for SD devices
+TO=${1:-5}
+lsscsi |awk '/Vexata/ {print $NF}'| while read DN
+do 
+echo "${TO}" >/sys/block/$(basename $DN)/device/timeout
+done 
+}
+
+lsdev_to()
+{
+# HELP : List timeout for SD devices
+TO=${1:-5}
+lsscsi |awk '/Vexata/ {print $NF}'| while read DN
+do 
+cat /sys/block/$(basename $DN)/device/timeout
+done 
+}
+
+function vhelp {
+# HELP : List help on all vexata custom test environment modules 
+grep -A2 "()$" .test_env | paste - - - -  | sed 's/()//g; s/{//g; s/. HELP//g; s/--//g'|awk -F: '{printf "%20s :%s\n",$1,$2}'
+}
+

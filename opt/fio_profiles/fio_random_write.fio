@@ -1,0 +1,14 @@
+[global]
+size=${size}
+filename=${filename}
+ioengine=libaio
+iodepth=8
+numjobs=8
+invalidate=1
+direct=1
+runtime=${time}
+time_based
+
+[rand-read]
+name=random write
+rw=randwrite

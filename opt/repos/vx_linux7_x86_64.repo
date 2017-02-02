@@ -1,0 +1,5 @@
+[vx_centos_x86_64]
+name=Custom Repository 
+baseurl=file:///opt/beetle/vx_linux7_x86_64/
+enabled=1
+gpgcheck=0
