@@ -1,16 +1,38 @@
 # Beetle - Overview 
-The main goal of this tool is to streamline some of the unexpected we often encounter when we walk in to the remote POC datacenters with unique policies and perceptions. As said, unexpected will always be there and hope to address them as much as possible using this tool. 
+The main goal of this tool is to streamline some of the unexpected we often encounter when we walk in to the remote POC datacenters with unique policies and perceptions. As is unexpected things will always be there and hope to address them as much as possible using this tool. 
 
 One of those scenarios is walking in to the lab or datacenter with no access to the internet or yum/zypper repositories. This package can be downloaded locally to your laptop or external media from GitHub and use it in those environments. The custom repositories included in this package will take care of this.
 
 In addition, we had an opportunity to develop some useful shortcuts (unix functions to sound boring) over period of time to help with some of the frequently performed tasks. These shortcuts do assume some non-minimal packages are installed on the Linux hosts. Hence we are bundling those with the custom repos included in this package.
 
 # How to use it
-
+## Download the git repository
 Run on any Linux host with access to github:
 ```
-git clone https://github.com/vxtools/beetle.git
+git clone https://github.com/vxtools/beetle.git /opt
 ```
-# List of included packages
+
+Note: As of now, please download this git repo on /opt in the Linux test machine. There is a dependency on custom repos for this. Will update this as and when we find an altenative.
+
+## Run the Install script.
+Identify the Linux distro that you are working on and run respective install scripts:
+
+###### CentOS/Redhat/OEL/Fedora (version 7)
+```
+./install_linux.sh
+```
+###### SLES 12
+```
+./install_sles.sh
+```
+
+# What it does
+
+- Configures the custom repos
+- Installs all the required packages
+- Install device-mapper and configures with vexata specific settings
+- Installs udev rules optmized for vexata array
+- Cleans up the custom repo
+
 
 # Contact
