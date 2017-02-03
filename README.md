@@ -39,6 +39,20 @@ Identify the Linux distro that you are working on and run respective install scr
 # ./install_sles.sh
 ```
 
+## Additional lpfc settings
+For inbox drivers, please run the following commands to distribute the interrupts across all cores effeciently. Since irqbalance is a system level setting, this is not included in the install script.
+```
+# systemctl stop irqbalance 
+# systemctl disable irqbalance 
+# cp -pr /opt/beetle/opt/emulex/elx-lpfc-vector-map.conf /etc/modprobe.d/
+# cp -pr /opt/beetle/opt/emulex/lpfc/lpfc_vector_map.sh /etc/modprobe.d/lpfc
+# cp –pr /opt/beetle/opt/emulex/lpfc/lpfc_configure_oas.sh /etc/modprobe.d/lpfc
+```
+If you are able to install the latest driver from [Broadcom Website](https://www.broadcom.com/support/download-search
+), you may just run following command to increase the `lpfc_fcp_imax` value.
+```
+# sed -i "s/lpfc $CMD/lpfc lpfc_fcp_imax=200000 $CMD/g" /etc/modprobe.d/elx-lpfc-vector-map.conf 
+```
 # What it does
 
 - Configures the custom repos
