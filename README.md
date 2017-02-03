@@ -145,7 +145,7 @@ PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt 
 # show fcns database vsan 1
 ```
 
-* If nothing weird found from above steps, please refer to Linux best practices guide to try all other rescaning options.
+* If no obvious issues are found from above steps, please refer to **Linux best practices guide** to try all other rescaning options.
 
 ## Handy shortcuts
 Following are the list of handy shortcuts available to help with some routine tasks.
