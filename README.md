@@ -136,6 +136,7 @@ PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt 
 ```
 
 * Login to SAN FC switch or contact the SAN administrator to make sure all ports are logged in properly to the switch.
+
 ###### Brocade Switch
 ```
 # switchshow
