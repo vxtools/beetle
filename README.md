@@ -27,8 +27,8 @@ Note: As of now, please download this git repo on /opt in the Linux test machine
 - SLES12
 Note: Support to other OSes can be added on an as-needed basis.
 
-## Run the Install script.
-Identify the Linux distro that you are working on and run respective install scripts:
+## Step-1 : Run the Install script.
+Identify the Linux distro that you are working on and run respective install scripts (on all Linux hosts connected to the array):
 
 ###### CentOS/Redhat/OEL/Fedora (version 7)
 ```
@@ -139,8 +139,18 @@ PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt 
 
 ###### Brocade Switch
 ```
-# switchshow   # to check the port login status
-# zoneshow --validate      # to check zoning
+switch:admin> switchshow   # to check the port login status
+switch:admin> zoneshow --validate # to verify all members of the zone are active or not.
+Defined configuration:
+ cfg:	cfg1	zone1; zone10; zone2
+ zone:	zone1	10:00:00:90:fa:92:77:ec*; 10:00:3c:91:2b:00:75:00
+
+Effective configuration:
+ cfg:	cfg1	
+ zone:	zone1	10:00:00:90:fa:92:77:ec*
+		10:00:3c:91:2b:00:75:00
+    
+------------------------------------
 ~ - Invalid configuration
 * - Member does not exist
 # - Invalid usage of broadcast zone
@@ -151,10 +161,8 @@ PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt 
 # show zoneset active vsan 1 
 zoneset name b33 vsan 1
   zone name bolt35 vsan 1
-  * fcid 0x487500 [pwwn 10:00:00:90:fa:92:75:f5]
-  * fcid 0x487600 [pwwn 10:00:00:90:fa:92:75:f4]
-   fcid 0x487800 [pwwn 10:00:00:90:fa:92:76:20]
-  * fcid 0x487700 [pwwn 10:00:00:90:fa:92:76:21]
+   fcid 0x487500 [pwwn 10:00:00:90:fa:92:77:ed]
+  * fcid 0x487600 [pwwn 10:00:3c:91:2b:00:75:01]
   <truncated>
 * if link is up
 ```
