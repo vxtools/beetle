@@ -80,14 +80,14 @@ HOSTS=("host1" "host2") # Replace this with linux hosts assosiated with this set
 # /root/configure_vexata_array.sh [No. of Volumes] [Each Volume Size in GiB]
 ```
 
-Now the fun part starts, let us make sure the volumes provisioned are visible to hosts:
+Now the **fun part begins**, let us make sure the volumes provisioned are visible to hosts:
 
-- [ ] Login to individual Linux host and run rescan
+* Login to individual Linux host and run rescan
 ```
 # rescan-scsi-bus.sh
 ```
 
-- [ ] Make sure multipath identifies vexata paths correctly.
+* Make sure multipath identifies vexata paths correctly.
 ```
 # source /opt/beetle/.test_env
 # vc
@@ -102,14 +102,14 @@ dm-12 : 32
 dm-11 : 32
 ```
 
-- [ ] If you don't see the expected device count for `Vexata SDs`. Make sure all fiber channel ports are online on linux host
+* If you don't see the expected device count for `Vexata SDs`. Make sure all fiber channel ports are online on linux host
 ```
 # ws
 host11 0x10000090fa9277ec Online 16 Gbit
 host12 0x10000090fa9277ed Online 16 Gbit
 ```
 
-- [ ]  Make sure all FC ports are online on Vexata Array.
+*  Make sure all FC ports are online on Vexata Array.
 ```
 [root@bolt41-ioc0 ~]$  vxcli sa portlist
 
@@ -135,7 +135,7 @@ PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt 
 15        0/1/7          FC    10:00:3c:91:2b:00:75:0f       20      24       2  Online
 ```
 
-- [ ] Login to SAN FC switch or contact the SAN administrator to make sure all ports are logged in properly to the switch.
+* Login to SAN FC switch or contact the SAN administrator to make sure all ports are logged in properly to the switch.
 ###### Brocade Switch
 ```
 # switchshow
@@ -145,7 +145,7 @@ PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt 
 # show fcns database vsan 1
 ```
 
-- [ ] If nothing weird found from above steps, please refer to Linux best practices guide to try all other rescaning options.
+* If nothing weird found from above steps, please refer to Linux best practices guide to try all other rescaning options.
 
 ## Handy shortcuts
 Following are the list of handy shortcuts available to help with some routine tasks.
