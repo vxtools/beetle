@@ -80,6 +80,73 @@ HOSTS=("host1" "host2") # Replace this with linux hosts assosiated with this set
 # /root/configure_vexata_array.sh [No. of Volumes] [Each Volume Size in GiB]
 ```
 
+Now the fun part starts, let us make sure the volumes provisioned are visible to hosts:
+
+1. Login to individual Linux host and run rescan
+```
+# rescan-scsi-bus.sh
+```
+
+2. Make sure multipath identifies vexata paths correctly.
+```
+# source /opt/beetle/.test_env
+# vc
+Vexata SDs : 224
+Vexata DMs : 7
+dm-10 : 32
+dm-9 : 32
+dm-8 : 32
+dm-7 : 32
+dm-6 : 32
+dm-12 : 32
+dm-11 : 32
+```
+
+3. If you don't see the expected device count for `Vexata SDs`. Make sure all fiber channel ports are online on linux host
+```
+# ws
+host11 0x10000090fa9277ec Online 16 Gbit
+host12 0x10000090fa9277ed Online 16 Gbit
+```
+
+4. Make sure all FC ports are online on Vexata Array.
+```
+[root@bolt41-ioc0 ~]$  vxcli sa portlist
+
+Num SA Ports =  16
+
+PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt  State
+--------------------------------------------------------------------------------------------
+00        0/0/0          FC    10:00:3c:91:2b:00:75:00       20      24       2  Online
+01        0/0/1          FC    10:00:3c:91:2b:00:75:01       20      24       2  Online
+02        0/0/2          FC    10:00:3c:91:2b:00:75:02       20      24       2  Online
+03        0/0/3          FC    10:00:3c:91:2b:00:75:03       20      24       2  Online
+04        0/0/4          FC    10:00:3c:91:2b:00:75:04       20      24       2  Online
+05        0/0/5          FC    10:00:3c:91:2b:00:75:05       20      24       2  Online
+06        0/0/6          FC    10:00:3c:91:2b:00:75:06       20      24       2  Online
+07        0/0/7          FC    10:00:3c:91:2b:00:75:07       20      24       2  Online
+08        0/1/0          FC    10:00:3c:91:2b:00:75:08       20      24       2  Online
+09        0/1/1          FC    10:00:3c:91:2b:00:75:09       20      24       2  Online
+10        0/1/2          FC    10:00:3c:91:2b:00:75:0a       20      24       2  Online
+11        0/1/3          FC    10:00:3c:91:2b:00:75:0b       20      24       2  Online
+12        0/1/4          FC    10:00:3c:91:2b:00:75:0c       20      24       2  Online
+13        0/1/5          FC    10:00:3c:91:2b:00:75:0d       20      24       2  Online
+14        0/1/6          FC    10:00:3c:91:2b:00:75:0e       20      24       2  Online
+15        0/1/7          FC    10:00:3c:91:2b:00:75:0f       20      24       2  Online
+```
+
+5. Login to SAN FC switch or contact the SAN administrator to make sure all ports are logged in properly to the switch.
+###### Brocade Switch
+```
+# switchshow
+```
+###### Cisco Switch
+```
+# show fcns database vsan 1
+```
+
+6. If nothing weird found from above steps, please refer to Linux best practices guide to try all other rescaning options.
+
 ## Handy shortcuts
 Following are the list of handy shortcuts available to help with some routine tasks.
 These are not imported by default. It need to explicitly sourced on each linux host to use them.
