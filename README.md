@@ -27,8 +27,16 @@ Note: As of now, please download this git repo on /opt in the Linux test machine
 - SLES12
 Note: Support to other OSes can be added on an as-needed basis.
 
-## Step-1 : Run the Install script.
+## Step-1: Run the Install script.
 Identify the Linux distro that you are working on and run respective install scripts (on all Linux hosts connected to the array):
+
+## What it does
+
+- Configures the custom repos
+- Installs all the required packages
+- Install device-mapper and configures with vexata specific settings
+- Installs udev rules optmized for vexata array
+- Cleans up the custom repo
 
 ###### CentOS/Redhat/OEL/Fedora (version 7)
 ```
@@ -39,7 +47,7 @@ Identify the Linux distro that you are working on and run respective install scr
 # ./install_sles.sh
 ```
 
-## Additional lpfc settings
+## Step-2: Additional lpfc settings
 For inbox drivers, please run the following commands to distribute the interrupts across all cores effeciently. Since irqbalance is a system level setting, this is not included in the install script.
 ```
 # systemctl stop irqbalance 
@@ -53,15 +61,8 @@ If you are able to install the latest driver from [Broadcom Website](https://www
 ```
 # sed -i "s/lpfc $CMD/lpfc lpfc_fcp_imax=200000 $CMD/g" /etc/modprobe.d/elx-lpfc-vector-map.conf 
 ```
-# What it does
 
-- Configures the custom repos
-- Installs all the required packages
-- Install device-mapper and configures with vexata specific settings
-- Installs udev rules optmized for vexata array
-- Cleans up the custom repo
-
-## Vexata Array provisioning script
+## Step-3: Vexata Array provisioning script
 File location: `vx_scripts/configure_vexata_array.sh`  
 Please note that this `script needs to be run from array`.
 
