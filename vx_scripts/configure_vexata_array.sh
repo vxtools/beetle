@@ -15,8 +15,8 @@
 HOSTS=("ebc-1u-host09" "ebc-1u-host10") # Replace this with linux hosts assosiated with this setup
 HCOUNT=${#HOSTS[@]}
 ROLE=$(vxmeminfo --role | awk -F: '{print $NF}'|sed "s/ //g"| tr A-Z a-z)
-VOLS=${1:-10} # Number of Volumes : 10(default)
-SIZE=${2:-250} # Starting size : default=250 GiB
+VOLS=${1:-8} # Number of Volumes : 10(default)
+SIZE=${2:-256} # Starting size : default=250 GiB
 DGSTATE=$(vxcli dg show  |awk '/DG State:/ {print $NF}' | tr A-Z a-z)
 export SIZE INCR VOLS HOSTS HCOUNT VGSTATE
 
