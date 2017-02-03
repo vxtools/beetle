@@ -135,15 +135,28 @@ PortNum   Node/Ioc/Port  Type  WWN                       IniCnt  VolCnt  RefCnt 
 15        0/1/7          FC    10:00:3c:91:2b:00:75:0f       20      24       2  Online
 ```
 
-* Login to SAN FC switch or contact the SAN administrator to make sure all ports are logged in properly to the switch.
+* Login to SAN FC switch or contact the SAN administrator to make sure all ports are logged in properly to the FC switch. If Zoning is enabled, make sure it is set properly. 
 
 ###### Brocade Switch
 ```
-# switchshow
+# switchshow   # to check the port login status
+# zoneshow --validate      # to check zoning
+~ - Invalid configuration
+* - Member does not exist
+# - Invalid usage of broadcast zone
 ```
 ###### Cisco Switch
 ```
 # show fcns database vsan 1
+# show zoneset active vsan 1 
+zoneset name b33 vsan 1
+  zone name bolt35 vsan 1
+  * fcid 0x487500 [pwwn 10:00:00:90:fa:92:75:f5]
+  * fcid 0x487600 [pwwn 10:00:00:90:fa:92:75:f4]
+   fcid 0x487800 [pwwn 10:00:00:90:fa:92:76:20]
+  * fcid 0x487700 [pwwn 10:00:00:90:fa:92:76:21]
+  <truncated>
+* if link is up
 ```
 
 * If no obvious issues are found from above steps, please refer to **Linux best practices guide** to try all other rescaning options.
