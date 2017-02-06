@@ -16,7 +16,7 @@ cp -pr $REPOSRC $REPODIR
 # Install the required packages
 #
 printh "Installing the required utilities....."
-$YUM sysfsutils lsscsi sysstat java libaio-devel zlib-devel ipmitool sg3_utils net-tools wget
+$YUM sysfsutils lsscsi sysstat java libaio-devel zlib-devel ipmitool sg3_utils net-tools wget pciutils
 
 # Install and Configure multipath
 #
