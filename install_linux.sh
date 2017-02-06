@@ -6,6 +6,8 @@ function printh {
 echo "$(date) : $@"
 }
 
+[[ ! -d /opt/beetle ]] && { echo "beetle was not installed on /opt directory. please reinstall on /opt and retry..." ; exit 255 ;}
+
 # Configure the repo
 #
 printh "Copying the custom yum repository....."
