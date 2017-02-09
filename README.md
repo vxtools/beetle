@@ -225,4 +225,4 @@ vc ()
 
 # Contact
 
-Feel free to reach out to kishore@vexata.com for any questions. Appreciate any feedback or suggestions to make this tool more useful.
+Feel free to reach out to vxtools@vexata.com for any questions. Appreciate any feedback or suggestions to make this tool more useful.
