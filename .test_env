@@ -64,7 +64,7 @@ lstune ()
 	cat /sys/block/$drivename/queue/add_random
 	cat /sys/block/$drivename/queue/rq_affinity
 	echo ":$drivename"
-    done | xargs -n 7| paste - - - 
+    done | xargs -n 6| paste - - - 
 }
 
 tune_all()
