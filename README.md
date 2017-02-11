@@ -59,7 +59,7 @@ For inbox drivers, please run the following commands to distribute the interrupt
 If you are able to install the latest driver from [Broadcom Website](https://www.broadcom.com/support/download-search
 ), you may just run following command to increase the `lpfc_fcp_imax` value.
 ```
-# sed -i "s/lpfc $CMD/lpfc lpfc_fcp_imax=200000 $CMD/g" /etc/modprobe.d/elx-lpfc-vector-map.conf 
+# sed -i "s/lpfc \$CMD/lpfc lpfc_fcp_imax=200000 \$CMD/g" /etc/modprobe.d/elx-lpfc-vector-map.conf 
 ```
 
 ## Step-3: Vexata Array provisioning script
