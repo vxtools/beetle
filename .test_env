@@ -222,3 +222,11 @@ function vhelp {
 grep -A2 "()$" .test_env | paste - - - -  | sed 's/()//g; s/{//g; s/. HELP//g; s/--//g'|awk -F: '{printf "%20s :%s\n",$1,$2}'
 }
 
+get_max ()
+{
+# HELP : List the max_sectors_kb value on all vexata volumes 
+    echo -n "DMs : ";
+    multipath -l | awk '/Vexata/ {print $3}' | xargs -L1 -i cat /sys/devices/virtual/block/{}/queue/max_sectors_kb | xargs;
+    echo -n "SDs : ";
+    multipath -l | awk '/ive undef/ {print $3}' | xargs -L1 -i cat /sys/class/block/{}/queue/max_sectors_kb | xargs
+}
