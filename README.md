@@ -205,6 +205,7 @@ These are not imported by default. It need to explicitly sourced on each linux h
  check_interrupts                 : Check interrupt values on the system
          chdev_to                 : Change timeout for SD devices
          lsdev_to                 : List timeout for SD devices
+         get_max                  : List the max_sectors_kb value on all vexata volumes
 ```
 
 You may view individual shortcut code by using `type`
