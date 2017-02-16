@@ -9,5 +9,5 @@
 
 wd=wd_oltpsim,sd=sd*,rdpct=80,seekpct=random
 
-rd=rd_oltpsim,wd=wd_reads,xfersize=8k,iorate=max,elapsed=300,threads=64,interval=10
+rd=rd_oltpsim,wd=wd_oltpsim,xfersize=8k,iorate=max,elapsed=300,threads=64,interval=10
 
