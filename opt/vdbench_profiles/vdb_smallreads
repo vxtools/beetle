@@ -1,0 +1,14 @@
+
+*
+* Profile to show case small reads (includes 4k and 8k)
+* sd list needs to be passed on or added to this file explicitly.
+*
+
+* sd=sd1,lun=/dev/dm-XX,openflags=o_direct
+* sd=sd2,lun=/dev/sdXX,openflags=o_direct
+
+wd=wd_reads,sd=sd*,rdpct=100,seekpct=random
+
+rd=rd_4k_reads,wd=wd_reads,xfersize=4k,iorate=max,elapsed=300,threads=64,interval=30
+rd=rd_8k_reads,wd=wd_reads,xfersize=8k,iorate=max,elapsed=300,threads=64,interval=30
+

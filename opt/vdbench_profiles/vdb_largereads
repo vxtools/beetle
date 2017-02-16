@@ -1,0 +1,13 @@
+
+*
+* Profile to show case max read bandwidth with large reads (includes 16k and 32k)
+* sd list needs to be passed on or added to this file explicitly.
+*
+
+* sd=sd1,lun=/dev/dm-XX,openflags=o_direct
+* sd=sd2,lun=/dev/sdXX,openflags=o_direct
+
+wd=wd_reads,sd=sd*,rdpct=100,seekpct=random
+
+rd=rd_16k_reads,wd=wd_reads,xfersize=16k,iorate=max,elapsed=300,threads=16,interval=30
+rd=rd_32k_reads,wd=wd_reads,xfersize=32k,iorate=max,elapsed=300,threads=16,interval=30

@@ -1,0 +1,14 @@
+
+*
+* Profile to perfome max writes IO/bandwidth with small block size
+* sd list needs to be passed on or added to this file explicitly.
+*
+
+* sd=sd1,lun=/dev/dm-XX,openflags=o_direct
+* sd=sd2,lun=/dev/sdXX,openflags=o_direct
+
+wd=wd_writes,sd=sd*,rdpct=0,seekpct=random
+
+rd=rd_4k_writes,wd=wd_writes,xfersize=4k,iorate=max,elapsed=300,threads=16,interval=30
+rd=rd_8k_writes,wd=wd_writes,xfersize=8k,iorate=max,elapsed=300,threads=16,interval=30
+
