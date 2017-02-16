@@ -10,5 +10,5 @@
 
 wd=wd_mixed,sd=sd*,rdpct=60,seekpct=random
 
-rd=rd_8k_mixed,wd=wd_reads,xfersize=8k,iorate=max,elapsed=300,threads=32,interval=10
+rd=rd_8k_mixed,wd=wd_mixed,xfersize=8k,iorate=max,elapsed=300,threads=32,interval=10
 
