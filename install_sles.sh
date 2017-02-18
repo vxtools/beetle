@@ -9,7 +9,7 @@ echo "$(date) : $@"
 # Configure the repo
 #
 printh "Installing the custom repo....."
-zypper addrepo -G ${PWD}/repos/vx_sles12_x86_64 $YCR
+zypper addrepo -G ${PWD}/opt/repos/vx_sles12_x86_64 $YCR
 
 # Install the required packages
 #
