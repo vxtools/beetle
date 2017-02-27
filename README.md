@@ -68,7 +68,7 @@ Please note that this `script needs to be run from array`.
 
 - Copy the file to the array
 ``` 
-# scp /opt/beetle/configure_vexata_array.sh root@<array-name>:/root/
+# scp /opt/beetle/vx_scripts/configure_vexata_array.sh root@<array-name>:/root/
 ```
 
 - Update the `HOSTS` list variable in the script to reflect all the linux host names.
