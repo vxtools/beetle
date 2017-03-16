@@ -12,7 +12,7 @@
 # Issues: reach out kishore@vexata.com 
 #####################################################
 
-HOSTS=("ebc-1u-host09" "ebc-1u-host10") # Replace this with linux hosts assosiated with this setup
+HOSTS=("hostnameA" "hostnameB") # Replace this with linux hosts assosiated with this setup
 HCOUNT=${#HOSTS[@]}
 ROLE=$(vxmeminfo --role | awk -F: '{print $NF}'|sed "s/ //g"| tr A-Z a-z)
 VOLS=${1:-8} # Number of Volumes : 10(default)
@@ -33,11 +33,12 @@ vxcli esm list
 vxcli sa list ; TS=$?
 [[ $TS != 0 ]] && { sa_enable ; }
 
-vxcli port list | grep Offline ; OFF=$?
-while [[ $OFF -eq 0 ]]
+vxcli port list | grep Offline ; OFF=$? ; ITR=0
+while [[ $OFF -eq 0  || $ITR -lt 6 ]]
 do
 	echo "Waiting for ports to come online....."
-	vxcli port list | grep Offline ; OFF=$? ; sleep 2
+	vxcli port list | grep Offline ; OFF=$? ; sleep 5 ; ((ITR++))
+	[[ $ITR -eq 6 ]] && { echo "WARNING !! Some ports are Offline .. Continuing with provisioning .. " ; }
 done
 }
 
