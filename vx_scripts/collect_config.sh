@@ -8,4 +8,4 @@ vxcli eg list |awk '/^[0-9]/ {print $2}' |while read E; do vxcli eg show $E > ${
 
 vxcli initiator list > ${ODIR}/ini.lst
 
-vxcli volume list > ${ODIR}/list.vol
+vxcli volume list|awk '/^[0-9]/ {print $1}' | xargs -L1 vxcli volume show |awk -F: '/Id:|Configured Size:|Name:/ {print $NF}'  | paste - - -  | sed 's/(//g;s/)//g' | awk '{print $2, $(NF-1), $NF}' > ${ODIR}/list.vol
