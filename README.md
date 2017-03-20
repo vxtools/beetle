@@ -52,6 +52,7 @@ For inbox drivers, please run the following commands to distribute the interrupt
 ```
 # systemctl stop irqbalance 
 # systemctl disable irqbalance 
+# mkdir -p /etc/modprobe.d/lpfc
 # cp -pr /opt/beetle/opt/emulex/elx-lpfc-vector-map.conf /etc/modprobe.d/
 # cp -pr /opt/beetle/opt/emulex/lpfc/lpfc_vector_map.sh /etc/modprobe.d/lpfc
 # cp –pr /opt/beetle/opt/emulex/lpfc/lpfc_configure_oas.sh /etc/modprobe.d/lpfc
