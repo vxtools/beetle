@@ -52,10 +52,9 @@ For inbox drivers, please run the following commands to distribute the interrupt
 ```
 # systemctl stop irqbalance 
 # systemctl disable irqbalance 
-# mkdir -p /etc/modprobe.d/lpfc
+
 # cp -pr /opt/beetle/opt/emulex/elx-lpfc-vector-map.conf /etc/modprobe.d/
-# cp -pr /opt/beetle/opt/emulex/lpfc/lpfc_vector_map.sh /etc/modprobe.d/lpfc
-# cp –pr /opt/beetle/opt/emulex/lpfc/lpfc_configure_oas.sh /etc/modprobe.d/lpfc
+# cp -pr /opt/beetle/opt/emulex/lpfc /etc/modprobe.d/
 ```
 If you are able to install the latest driver from [Broadcom Website](https://www.broadcom.com/support/download-search
 ), you may just run following command to increase the `lpfc_fcp_imax` value.
