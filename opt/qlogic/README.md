@@ -35,7 +35,7 @@ P - will disable striping /'s from file names.
 
 ```
 # multipath -F # Flushes all multipath devices
-# sleep 10 
+# sleep 60 
 # rmmod qla2xxx
 # modprobe qla2xxx
 ```
