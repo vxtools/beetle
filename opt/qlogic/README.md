@@ -1,3 +1,4 @@
+
 This is helper package to reload qla2xxx driver with enabling multiple vectors and setting the max value to 16 per port.
 After loading the module, it rebalances the interrupts across all the vectors.
 
@@ -7,8 +8,14 @@ Pre req : Disable irqbalance on the system
 systemctl stop irqbalance
 systemctl disable irqbalance
 ```
+## How to Install. 
 
-1. Extract the package with following flags.
+1. Download the tar file:
+```
+# wget https://github.com/vxtools/beetle/blob/master/opt/qlogic/qla_autoload.tar
+```
+
+2. Extract the package with following flags.
 
 ```
 # tar xvfP qla_autoload.tar 
@@ -16,7 +23,7 @@ systemctl disable irqbalance
 
 P - will disable striping /'s from file names.
 
-2. This will extract following two files in the host where the tar command was executed.
+3. This will extract following two files in the host where the tar command was executed.
 
 ```
 # tar tvfP /root/qla_autoload.tar
@@ -24,7 +31,7 @@ P - will disable striping /'s from file names.
 -rwxr-xr-x root/root       317 2017-03-22 20:05 /etc/qla2x_rebalance.sh
 ```
 
-3. Unload the qla2xxx module
+4. Unload the qla2xxx module
 
 ```
 # multipath -F # Flushes all multipath devices
@@ -92,7 +99,7 @@ Setting IRQ 122 to mask 10
 Setting IRQ 123 to mask 40
 ```
 
-How to verify if the settings got effective.
+## How to verify if the settings got effective.
 ```
 # cat /sys/module/qla2xxx/parameters/ql2xmaxqueues
 16
@@ -100,4 +107,19 @@ How to verify if the settings got effective.
 1
 # grep qla2xxx /proc/interrupts |wc -l
 64
+```
+
+## How to back off the changes.
+
+1. Remove the files from the system
+```
+# rm -rf /lib/modprobe.d/qla_autoload.conf
+# rm -rf /etc/qla2x_rebalance.sh
+```
+2. Reload the qlogic driver.
+```
+# multipath -F # Flushes all multipath devices
+# sleep 10 
+# rmmod qla2xxx
+# modprobe qla2xxx
 ```
