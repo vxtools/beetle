@@ -131,7 +131,7 @@ systemctl disable irqbalance
 
 ## Revert Modifications.
 
-Follow these steps to revert the changes from your system:
+Only use the following steps if the changes made by the procedure above are no longer needed:
 
 1. Remove these files from the system
    ```
