@@ -99,5 +99,5 @@ How to verify if the settings got effective.
 # cat /sys/module/qla2xxx/parameters/ql2xmultique_tag
 1
 # grep qla2xxx /proc/interrupts |wc -l
-52
+64
 ```
