@@ -144,20 +144,19 @@ Only use the following steps if the changes made by the procedure above are no l
    ```
 
 2. Revert implementation
+   1. If changes were implemented persistently:
+   
+      ```
+      # rm -rf /lib/modprobe.d/qla_autoload.conf
+      # rm -rf /etc/qla2x_rebalance.sh 
+      # dracut -f 
+      # reboot 
+      ```
+   1. If changes were implemented temporarily:
 
-  1. If changes implemented persistently:
-     ```
-     # rm -rf /lib/modprobe.d/qla_autoload.conf
-     # rm -rf /etc/qla2x_rebalance.sh 
-     #dracut -f 
-     #reboot 
-     ```
-  
-  1. If changes implemented temporarily:
-
-     ```
-     # multipath -F # Flushes all multipath devices
-     # sleep 10 
-     # rmmod qla2xxx
-     # modprobe qla2xxx
-     ```
+      ```
+      # multipath -F # Flushes all multipath devices
+      # sleep 10 
+      # rmmod qla2xxx
+      # modprobe qla2xxx
+      ```
