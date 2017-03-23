@@ -91,3 +91,13 @@ Setting IRQ 121 to mask 4
 Setting IRQ 122 to mask 10
 Setting IRQ 123 to mask 40
 ```
+
+How to verify if the settings got effective.
+```
+# cat /sys/module/qla2xxx/parameters/ql2xmaxqueues
+16
+# cat /sys/module/qla2xxx/parameters/ql2xmultique_tag
+1
+# grep qla2xxx /proc/interrupts |wc -l
+52
+```
