@@ -1,6 +1,11 @@
 # Introduction.
 This procedure modifies two qla2xxx driver parameters allowing for multiple vectors to be enabled and a max queue value of 16 per port.
 
+```
+ql2xmaxqueues:Enables MQ settings Default is 1 for single queue. Set it to number of queues in MQ mode. (int)
+ql2xmultique_tag:Enables CPU affinity settings for the driver Default is 0 for no affinity of request and response IO. Set it to 1 to turn on the cpu affinity. (int)
+```
+
 A script is included to rebalance the interrupts across all vectors.
 
 These modifications may be necessary to prevent soft lockup errors in high IOPS environments.
