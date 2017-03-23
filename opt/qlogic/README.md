@@ -1,3 +1,13 @@
+This is helper package to reload qla2xxx driver with enabling multiple vectors and setting the max value to 16 per port.
+After loading the module, it rebalances the interrupts across all the vectors.
+
+Pre req : Disable irqbalance on the system
+
+```
+systemctl stop irqbalance
+systemctl disable irqbalance
+```
+
 1. Extract the package with following flags.
 
 ```
