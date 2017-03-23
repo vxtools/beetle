@@ -1,6 +1,7 @@
 
-This is helper package to reload qla2xxx driver with enabling multiple vectors and setting the max value to 16 per port.
-After loading the module, it rebalances the interrupts across all the vectors.
+This package will reload the qla2xxx driver with multiple vectors enabled and a max queue value of 16 per port.
+
+After loading the module, a script rebalances the interrupts across all vectors.
 
 Pre req : Disable irqbalance on the system
 
@@ -12,7 +13,7 @@ systemctl disable irqbalance
 
 1. Download the tar file:
 ```
-# wget https://github.com/vxtools/beetle/blob/master/opt/qlogic/qla_autoload.tar
+# wget https://github.com/vxtools/beetle/raw/master/opt/qlogic/qla_autoload.tar
 ```
 
 2. Extract the package with following flags.
@@ -99,7 +100,7 @@ Setting IRQ 122 to mask 10
 Setting IRQ 123 to mask 40
 ```
 
-## How to verify if the settings got effective.
+## How to verify the settings are applied.
 ```
 # cat /sys/module/qla2xxx/parameters/ql2xmaxqueues
 16
