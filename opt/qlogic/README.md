@@ -49,7 +49,7 @@ systemctl disable irqbalance
    
    1. Temporary implementation
    
-      *These modifications will **not** persist across a reboot.*
+      *These modifications will **not** persist across a reboot.  Disregard this step if your environment boots from SAN.*
 
       Unload the qla2xxx module
 
