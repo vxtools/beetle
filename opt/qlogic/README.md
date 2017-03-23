@@ -49,15 +49,15 @@ systemctl disable irqbalance
    1. Persistent implementation
    
       *These modifications will persist across system reboots.*
-
+      
       ```
-      # Backup the current RAMDISK 
+      # Backup the current RAMDISK
       # cp -pr /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.orig
-      # Creates new RAMDISK with new qla params 
-      # dracut -f
+      # Create new RAMDISK with updated qla params
+      # dracut -f
       # reboot
       ```
-   
+
    1. Temporary implementation
    
       *These modifications will **not** persist across a reboot.  Disregard this step if your environment boots from SAN.*
