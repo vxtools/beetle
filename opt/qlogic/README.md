@@ -1,5 +1,5 @@
 # Introduction.
-This procedure will allow for modifications to qla2xxx driver parameters allowing for multiple vectors to be enabled and a max queue value of 16 per port.
+This procedure modifies two qla2xxx driver parameters allowing for multiple vectors to be enabled and a max queue value of 16 per port.
 
 A script is included to rebalance the interrupts across all vectors.
 
