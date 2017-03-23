@@ -3,7 +3,11 @@ This procedure modifies two qla2xxx driver parameters allowing for multiple vect
 
 A script is included to rebalance the interrupts across all vectors.
 
-Pre req : Disable irqbalance on the system
+These modifications may be necessary to prevent soft lockup errors in high IOPS environments.
+
+## Pre requisites.
+
+Disable irqbalance on the system
 
 ```
 systemctl stop irqbalance
