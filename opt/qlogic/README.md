@@ -53,10 +53,8 @@ systemctl disable irqbalance
       ```
       # Backup the current RAMDISK 
       # cp -pr /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.orig
-      
-      # Creates new RAMDISK which includes the qla params defined in /lib/modprobe.d/qla_autoload.conf
-      # dracut -f 
-      
+      # Creates new RAMDISK with new qla params 
+      # dracut -f
       # reboot
       ```
    
