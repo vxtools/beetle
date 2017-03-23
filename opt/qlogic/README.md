@@ -5,7 +5,7 @@ A script is included to rebalance the interrupts across all vectors.
 
 These modifications may be necessary to prevent soft lockup errors in high IOPS environments.
 
-## Pre requisites.
+## Prerequisites.
 
 Disable irqbalance on the system
 
