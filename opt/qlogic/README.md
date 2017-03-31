@@ -154,8 +154,6 @@ Only use the following steps if the changes made by the procedure above are no l
    1. If changes were implemented persistently:
    
       ```
-      # rm -rf /lib/modprobe.d/qla_autoload.conf
-      # rm -rf /etc/qla2x_rebalance.sh 
       # dracut -f 
       # reboot 
       ```
