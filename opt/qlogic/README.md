@@ -78,6 +78,15 @@ systemctl disable irqbalance
       Setting IRQ 50 to mask 3
       Setting IRQ 51 to mask 5
       Setting IRQ 52 to mask 7
+      Setting IRQ 53 to mask 9
+      Setting IRQ 54 to mask 11
+      <truncated>
+      Setting IRQ 164 to mask 133
+      Setting IRQ 165 to mask 135
+      Setting IRQ 166 to mask 137
+      Setting IRQ 167 to mask 139
+      Setting IRQ 168 to mask 141
+      Setting IRQ 169 to mask 143
       ```
 
 ## Verify the settings were successfully implemented.
