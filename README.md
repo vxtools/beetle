@@ -48,7 +48,9 @@ Identify the Linux distro that you are working on and run respective install scr
 ```
 
 ## Step-2: Additional lpfc settings
-For inbox drivers, please run the following commands to distribute the interrupts across all cores effeciently. Since irqbalance is a system level setting, this is not included in the install script.
+For inbox drivers, please run the following commands or use `update_emulex_modprobe.sh` script to distribute the interrupts across all cores effeciently. Since irqbalance is a system level setting, disabling it is not part of the update script. 
+PS: Make sure there are no other devices like ethernet or inifiniband cards need irqbalance settings with in the system. 
+
 ```
 # systemctl stop irqbalance 
 # systemctl disable irqbalance 
@@ -56,6 +58,7 @@ For inbox drivers, please run the following commands to distribute the interrupt
 # cp -pr /opt/beetle/opt/emulex/elx-lpfc-vector-map.conf /etc/modprobe.d/
 # cp -pr /opt/beetle/opt/emulex/lpfc /etc/modprobe.d/
 ```
+
 If you are able to install the latest driver from [Broadcom Website](https://www.broadcom.com/support/download-search
 ), you may just run following command to increase the `lpfc_fcp_imax` value.
 ```
