@@ -34,7 +34,7 @@ vxcli sa list ; TS=$?
 [[ $TS != 0 ]] && { sa_enable ; }
 
 vxcli port list | grep Offline ; OFF=$? ; ITR=0
-while [[ $OFF -eq 0  || $ITR -lt 6 ]]
+while [[ $OFF -eq 0  && $ITR -lt 6 ]]
 do
 	echo "Waiting for ports to come online....."
 	vxcli port list | grep Offline ; OFF=$? ; sleep 5 ; ((ITR++))
