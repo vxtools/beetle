@@ -37,7 +37,7 @@ systemctl disable irqbalance
 3. This will result in the following two files being extracted on the host:
 
    ```
-   # tar tvfP /root/qla_autoload.tar
+   # tar tvfP qla_autoload.tar
    -rw-r--r-- root/root       167 2017-03-22 19:51 /lib/modprobe.d/qla_autoload.conf
    -rwxr-xr-x root/root       317 2017-03-22 20:05 /etc/qla2x_rebalance.sh
    ```
