@@ -48,7 +48,7 @@ Identify the Linux distro that you are working on and run respective install scr
 ```
 
 ## Step-2: Additional lpfc settings
-For inbox drivers, please run the following commands or use `update_emulex_modprobe.sh` script to distribute the interrupts across all cores effeciently. Since irqbalance is a system level setting, disabling it is not part of the update script. 
+For inbox drivers, please run the following commands or use `update_emulex_modprobe.sh` script to distribute the interrupts across all cores effeciently. Since irqbalance is a system level setting, disabling it is not part of the `install_<distro>.sh` script. 
 
 PS: Make sure there are no other devices like ethernet or inifiniband cards need irqbalance settings with in the system before disabling it. 
 
