@@ -20,8 +20,9 @@ SIZE=${2:-256} # Starting size : default=250 GiB
 DGSTATE=$(vxcli dg show  |awk '/DG State:/ {print $NF}' | tr A-Z a-z)
 export SIZE INCR VOLS HOSTS HCOUNT VGSTATE
 
-[[ $ROLE != "master" ]] && { echo "Current Role : $ROLE, Expected Role : master" ; exit 255 ; }
-[[ $DGSTATE != "active" ]] && { echo "NO active DG present, Please create a DG first and rerun.. " ; exit 255 ; }
+[[ $ROLE != "master" ]] && { echo "ERROR !! Current Role : $ROLE, Expected Role : master" ; exit 255 ; }
+[[ $DGSTATE != "active" ]] && { echo "ERROR !! NO active DG present, Please create a DG first and rerun.. " ; exit 255 ; }
+[[ $VOLS >=33 ]] && { echo "ERROR !! Please create multiple EGs for volumes over 32 per host..." ; exit 255 ; }
 
 function sa_enable() {
 vxcli sa create vsa_0
