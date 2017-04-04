@@ -66,6 +66,8 @@ If you are able to install the latest driver from [Broadcom Website](https://www
 # sed -i "s/lpfc \$CMD/lpfc lpfc_fcp_imax=200000 \$CMD/g" /etc/modprobe.d/elx-lpfc-vector-map.conf 
 ```
 
+With inbox or latest drivers, you could run `multipath -F; sleep 5 ; rmmod lpfc` and `modprobe lpfc`  or `reboot` the host for the above settings to get effective.
+
 ## Step-3: Vexata Array provisioning script
 File location: `vx_scripts/configure_vexata_array.sh`  
 Please note that this `script needs to be run from array`.
