@@ -13,7 +13,6 @@
 #####################################################
 
 HOSTS=("hostnameA" "hostnameB") # Replace this with linux hosts assosiated with this setup
-HOSTS=("ebc-2u-host02")
 HCOUNT=${#HOSTS[@]}
 ROLE=$(vxmeminfo --role | awk -F: '{print $NF}'|sed "s/ //g"| tr A-Z a-z)
 VOLS=${1:-8} # Number of Volumes : 10(default)
@@ -102,12 +101,13 @@ vxcli eg show $EGNAME > /dev/null 2>&1
 }
 
 function config_show() {
+echo $1
 for i in eg vg ig pg
 do
 vxcli $i list
 done
 }
-config_show > $TMP
+config_show "Before: " > $TMP
 initial_setup
 i=0
 while [[ $i -lt $HCOUNT ]]
@@ -120,5 +120,5 @@ pg_create
 eg_create
 ((i++))
 done
-config_show > $TMP
+config_show "After: " >> $TMP
 echo "Configuration stored in $TMP "
