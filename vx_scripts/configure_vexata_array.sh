@@ -28,6 +28,17 @@ export SIZE INCR VOLS HOSTS HCOUNT VGSTATE RNDM VPVG
 [[ $DGSTATE != "active" ]] && { echo "ERROR!! NO active DG present, Please create a DG first and rerun.. " ; exit 255 ; }
 [[ $VOLS -gt $VPVG ]] && { echo "ERROR!! Please create multiple EGs for volumes over $VPVG per host..." ; exit 255 ; }
 
+i=0
+while [[ $i -lt $HCOUNT ]]
+do
+export HOST=${HOSTS[$i]}
+ping -c 2 -W 2  $HOST > /dev/null 2>&1 
+[[ $? -ne 0 ]] && { ((PSTAT++)) ; echo "ERROR!! $HOST not pingable..." ; }
+((i++))
+done
+
+[[ $PSTAT -ne 0 ]] && { echo "ERROR!! Few hosts are not pingable...." ; exit 255 ; } 
+
 function sa_enable() {
 vxcli sa create vsa_0
 vxcli sa enable 0
@@ -107,6 +118,7 @@ do
 vxcli $i list
 done
 }
+
 config_show "Before: " > $TMP
 initial_setup
 i=0
