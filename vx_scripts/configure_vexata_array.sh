@@ -13,16 +13,21 @@
 #####################################################
 
 HOSTS=("hostnameA" "hostnameB") # Replace this with linux hosts assosiated with this setup
+HOSTS=("ebc-2u-host02")
 HCOUNT=${#HOSTS[@]}
 ROLE=$(vxmeminfo --role | awk -F: '{print $NF}'|sed "s/ //g"| tr A-Z a-z)
 VOLS=${1:-8} # Number of Volumes : 10(default)
 SIZE=${2:-256} # Starting size : default=250 GiB
 DGSTATE=$(vxcli dg show  |awk '/DG State:/ {print $NF}' | tr A-Z a-z)
-export SIZE INCR VOLS HOSTS HCOUNT VGSTATE
+RNDM=$(head /dev/urandom | tr -dc A-Za-z0-9| cut -c 1-2)
+VPVG=$(vxcli sa show | awk '/MaxMbrsPerVg/ {print $NF}'|sed 's/)//g')
+TMP=/tmp/$(basename $0 .sh)_${RNDM}.tmp
+export SIZE INCR VOLS HOSTS HCOUNT VGSTATE RNDM VPVG
 
-[[ $ROLE != "master" ]] && { echo "ERROR !! Current Role : $ROLE, Expected Role : master" ; exit 255 ; }
-[[ $DGSTATE != "active" ]] && { echo "ERROR !! NO active DG present, Please create a DG first and rerun.. " ; exit 255 ; }
-[[ $VOLS >=33 ]] && { echo "ERROR !! Please create multiple EGs for volumes over 32 per host..." ; exit 255 ; }
+
+[[ $ROLE != "master" ]] && { echo "ERROR!! Current Role : $ROLE, Expected Role : master" ; exit 255 ; }
+[[ $DGSTATE != "active" ]] && { echo "ERROR!! NO active DG present, Please create a DG first and rerun.. " ; exit 255 ; }
+[[ $VOLS -gt $VPVG ]] && { echo "ERROR!! Please create multiple EGs for volumes over $VPVG per host..." ; exit 255 ; }
 
 function sa_enable() {
 vxcli sa create vsa_0
@@ -43,6 +48,10 @@ do
 done
 }
 
+function echoit() {
+echo "$1 $2 exists .... skipping operation"
+}
+
 function volume_create() {
 REMAIN=$(vxcli sa show|awk '/Size left:/ {print $(NF-1)}' |sed "s/(//g")
 LCOUNT=1
@@ -51,16 +60,18 @@ export LCOUNT REMAIN
 while [[ $REMAIN -gt $((SIZE*1024)) && $LCOUNT -le $VOLS ]]
 do
 	REMAIN=$((REMAIN+SIZE))
-	VOLNAME=vol_${HOST}_${LCOUNT}
-	echo "Creating Volume $VOLNAME of Size : $SIZE GiB"
-	vxcli volume create $VOLNAME ${SIZE} GiB
+	VOLNAME=vol_${HOST}_${RNDM}_${LCOUNT}
+	vxcli volume show $VOLNAME > /dev/null 2>&1
+	[[ $? -ne 0 ]] && { echo "Creating Volume $VOLNAME of Size : $SIZE GiB" ; vxcli volume create $VOLNAME ${SIZE} GiB ; } || { echoit Volume $VOLNAME ; }
 	((LCOUNT++))
 	REMAIN=$((REMAIN-SIZE))
 done
 }
 
 function vg_create() {
-vxcli vg create vg_${HOST} $(vxcli volume list | grep vol_${HOST} | awk '{print $1}')
+export VGNAME=vg_${HOST}_${RNDM}
+vxcli vg show $VGNAME > /dev/null 2>&1
+[[ $? -ne 0 ]] && { vxcli vg create ${VGNAME} $(vxcli volume list | grep vol_${HOST}_${RNDM} | awk '{print $1}') ; } || { echoit VG $VGNAME ; }
 }
 
 function ig_create() {
@@ -74,15 +85,20 @@ do
 	I_ID=("${I_ID[@]}" "${T_ID[@]}")
 done
 
-vxcli ig create ig_$HOST $(echo ${I_ID[@]})
+echo $INIT
+vxcli ig show ig_$HOST > /dev/null 2>&1
+[[ $? -ne 0 ]] && { vxcli ig create ig_$HOST $(echo ${I_ID[@]}) ; } || { echoit IG $IGNAME ; }
 }
 
 function pg_create() {
-vxcli pg create pg_${HOST} $(seq 0 15)
+vxcli pg show pg_${HOST} > /dev/null 2>&1
+[[ $? -ne 0 ]] && { vxcli pg create pg_${HOST} $(seq 0 15) ; } 
 }
 
 function eg_create() {
-vxcli eg create eg_${HOST} vg_${HOST}:ig_${HOST}:pg_${HOST}
+EGNAME=eg_${HOST}_${RNDM}
+vxcli eg show $EGNAME > /dev/null 2>&1
+[[ $? -ne 0 ]] && { vxcli eg create ${EGNAME} ${VGNAME}:ig_${HOST}:pg_${HOST} ; } || { echoit EG $EGNAME ; }
 }
 
 function config_show() {
@@ -91,7 +107,7 @@ do
 vxcli $i list
 done
 }
-config_show
+config_show > $TMP
 initial_setup
 i=0
 while [[ $i -lt $HCOUNT ]]
@@ -104,4 +120,5 @@ pg_create
 eg_create
 ((i++))
 done
-config_show
+config_show > $TMP
+echo "Configuration stored in $TMP "
