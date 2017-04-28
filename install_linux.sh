@@ -3,7 +3,7 @@
 source .config
 
 function printh {
-echo "$(date) : $@"
+echo -e "$(date) : $@"
 }
 
 [[ ! -d /opt/beetle ]] && { echo "beetle was not installed on /opt directory. please reinstall on /opt and retry..." ; exit 255 ;}
@@ -16,20 +16,28 @@ cp -pr $REPOSRC $REPODIR
 # Install the required packages
 #
 printh "Installing the required utilities....."
-$YUM sysfsutils lsscsi sysstat java libaio-devel zlib-devel ipmitool sg3_utils net-tools wget pciutils
+$YUM sysfsutils lsscsi sysstat java libaio-devel zlib-devel ipmitool sg3_utils net-tools wget pciutils > $YLOG
 
 # Install and Configure multipath
 #
+printh "Checking for multipath install...."
+mstatus=$(rpm -qa |grep multipath|wc -l)
+if [[ $mstatus -eq 0 ]] 
+then
 printh "Install and configure multipath....."
-$YUM device-mapper-multipath
+$YUM device-mapper-multipath >> $YLOG
 cp -r $MPSRC $MPDIR
 systemctl enable multipathd
 systemctl start multipathd
+else
+printh "multipath software exists, ${RD}PLEASE APPEND${NC} following lines to /etc/multipath.conf ..."
+cat $MPSRC
+fi
 
 # Installation of FIO
 #
 printh "Installing FIO....."
-$YUM fio 
+$YUM fio  >> $YLOG
 
 # Configure the required udev rules.
 #
@@ -39,6 +47,6 @@ udevadm control --reload ; udevadm trigger
 
 # Cleanup
 #
-printh "INSTALLATION COMPLETED...... CLEANING UP ...."
+printh "INSTALLATION COMPLETED, logfile : $YLOG ...... CLEANING UP ...."
 
 rm $REPODIR/$(basename $REPOSRC)
