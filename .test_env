@@ -158,7 +158,7 @@ vc()
 echo "Vexata SDs : $(lsscsi |grep Vexata|wc -l)"
 tf=$(multipath -ll)
 echo "Vexata DMs : $(echo "$tf" | grep Vexata |wc -l)"
-echo "$tf" | awk '/Vexata/ {print $3}' | while read mp; do echo "$mp : $(echo "$tf" | sed -n '/'${mp}'/,/^mpath/p' | awk '/^  \|-|^  `/ {print $0}' | wc -l)"; done
+echo "$tf" | awk '/Vexata/ {print $1}' | while read mp; do echo "$mp : $(multipath -l $tf | awk '/^  \|-|^  `/ {print $0}' | wc -l)"; done
 }
 
 
