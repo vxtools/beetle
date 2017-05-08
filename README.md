@@ -84,7 +84,7 @@ HOSTS=("host1" "host2") # Replace this with linux hosts assosiated with this set
 
 - If possible enable ssh password less loging from array to linux host. If its not an option for some reason, just type the host password when prompted. 
 ```
-# /root/configure_vexata_array.sh [No. of Volumes] [Each Volume Size in GiB]
+# /root/configure_vexata_array.sh <No. of Volumes> <Each Volume Size in GiB>
 ```
 
 Now the **fun part begins**, let us make sure the volumes provisioned are visible to hosts:
