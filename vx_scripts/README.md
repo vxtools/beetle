@@ -14,13 +14,22 @@ Example-2:
 ```
 Above example creates total of 64 volumes per each host, with 32 volumes per EG and total of 2 EGs per host.
 
-### Usage : ./config_recreate.sh
+### Usage : # ./collect_config.sh
 
 This script collects the backup of the configuration. 
 
-The information collected through collect_config.sh can be used to re-create the config.
+The information collected through collect_config.sh can be used to recreate the config (using ` ./config_recreate.sh `). Backup of the configuration is stored in /tmp/conf directory.
 
-Backup of the configuration is stored in /tmp/conf directory
+Example:
+```
+# ./collect_config.sh
+```
+
+### Usage : # ./config_recreate.sh
+
+The configuration collected through `./collect_config.sh ` can be used recreate the configuration on vexata array.
+
+This script looks for /tmp/conf directory for the input.
 
 Example:
 ```
