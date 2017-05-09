@@ -4,7 +4,7 @@
 # Enable SSH keyless authentication to these hosts to
 # avoid prompting for passwords during configurations
 #
-# USAGE : ./scriptname [VOLCOUNT] [VOLSIZE]
+# USAGE : ./scriptname <volcount> <volsize in GiB>
 #
 # -> This script runs on master IOC only
 # -> Assumes DG creation was done outside this script.
@@ -12,32 +12,55 @@
 # Issues: reach out kishore@vexata.com 
 #####################################################
 
+export SNAME=$(basename $0 .sh)
+export RD='\033[0;31m'
+export NC='\033[0m'
+export LY='\033[01;33m'
+export GN='\033[0;32m'
+export LP='\033[01;35m'
+
+
+function usage() {
+echo -e "${LP}USAGE : ${NC}# ./${SNAME} <volcount> <volsize in GiB> \n\n\
+${LP}Example-1: \n# ./${SNAME} 8 256 ${NC}# Creates 8 volumes of size 256 GiB each\n
+To Create multiple EGs (say higher than max volumed per EG), rerun the script multiple times\n
+${LP}Example-2: \n# ./${SNAME} 4 100 ${NC}# Creates additional 4 volumes of size 100 GiB each\n"
+exit 255
+}
+
+function error() { echo -e "${RD}ERROR!! ${NC} $*" ; }
+function warn() { echo -e "${LY}WARNING!! ${NC} $*" ; }
+
+[[ -s /etc/vxos-release ]] || { error "Script executes only on Vexata Arrays..." ; exit 255 ; }
+[[ $# < 2 || $# > 2 ]] && { error "Incorrect number of Arugments... \n" ; usage ; } 
+
 HOSTS=("hostnameA" "hostnameB") # Replace this with linux hosts assosiated with this setup
 HCOUNT=${#HOSTS[@]}
 ROLE=$(vxmeminfo --role | awk -F: '{print $NF}'|sed "s/ //g"| tr A-Z a-z)
-VOLS=${1:-8} # Number of Volumes : 10(default)
-SIZE=${2:-256} # Starting size : default=250 GiB
+VOLS=${1}
+SIZE=${2}
 DGSTATE=$(vxcli dg show  |awk '/DG State:/ {print $NF}' | tr A-Z a-z)
 RNDM=$(head /dev/urandom | tr -dc A-Za-z0-9| cut -c 1-2)
 VPVG=$(vxcli sa show | awk '/MaxMbrsPerVg/ {print $NF}'|sed 's/)//g')
-TMP=/tmp/$(basename $0 .sh)_${RNDM}.tmp
+TMP=/tmp/${SNAME}_${RNDM}.tmp
 export SIZE INCR VOLS HOSTS HCOUNT VGSTATE RNDM VPVG
 
 
-[[ $ROLE != "master" ]] && { echo "ERROR!! Current Role : $ROLE, Expected Role : master" ; exit 255 ; }
-[[ $DGSTATE != "active" ]] && { echo "ERROR!! NO active DG present, Please create a DG first and rerun.. " ; exit 255 ; }
-[[ $VOLS -gt $VPVG ]] && { echo "ERROR!! Please create multiple EGs for volumes over $VPVG per host..." ; exit 255 ; }
+[[ $ROLE != "master" ]] && { error "Current Role : $ROLE, Expected Role : master" ; exit 255 ; }
+[[ $DGSTATE != "active" ]] && { error "NO active DG present, Please create a DG first and rerun.. " ; exit 255 ; }
+[[ $VOLS -gt $VPVG ]] && { error "Please create multiple EGs for volumes over $VPVG per host..." ; exit 255 ; }
 
 i=0
 while [[ $i -lt $HCOUNT ]]
 do
 export HOST=${HOSTS[$i]}
 ping -c 2 -W 2  $HOST > /dev/null 2>&1 
-[[ $? -ne 0 ]] && { ((PSTAT++)) ; echo "ERROR!! $HOST not pingable..." ; }
+[[ $? -ne 0 ]] && { ((PSTAT++)) ; error "$HOST not pingable..." ; }
 ((i++))
 done
 
-[[ $PSTAT -ne 0 ]] && { echo "ERROR!! Few hosts are not pingable...." ; exit 255 ; } 
+[[ $PSTAT -ne 0 ]] && { error "Few hosts are not pingable...." ; exit 255 ; } 
+
 
 function sa_enable() {
 vxcli sa create vsa_0
@@ -54,7 +77,7 @@ while [[ $OFF -eq 0  && $ITR -lt 6 ]]
 do
 	echo "Waiting for ports to come online....."
 	vxcli port list | grep Offline ; OFF=$? ; sleep 5 ; ((ITR++))
-	[[ $ITR -eq 6 ]] && { echo "WARNING !! Some ports are Offline .. Continuing with provisioning .. " ; }
+	[[ $ITR -eq 6 ]] && { warn "Some ports are Offline .. Continuing with provisioning .. " ; }
 done
 }
 
