@@ -42,7 +42,7 @@ systool -c fc_host -A port_name -v |awk -F\= '/port_name|port_state|speed |Class
 
 dlist()
 {
-# HELP : list the dm-X devices in one line
+# HELP : List the dm-X devices in one line
 DEVLIST=$(multipath -l -p multibus|awk '/Vexata|active r/ {print $3}')
 CNT=$(echo $DEVLIST|wc -c)
 [[ $CNT == 1 ]] && DEVLIST=$(lsscsi |awk -F\/ '/Vexata/ {print $NF}' | xargs)
@@ -51,7 +51,7 @@ echo $DEVLIST
 
 sdlist()
 {
-# HELP : list the sdX devices in one line
+# HELP : List the sdX devices in one line
 lsscsi|awk -F\/  '/Vexata/ {print $NF}' | xargs
 }
 
@@ -82,7 +82,7 @@ tune_all()
 
 tune_random()
 {
-# HELP : Set the requested value to enable/disable entrophy on all vexata volumes(default:0).
+# HELP : Set the requested value to enable/disable entrophy on all vexata volumes (default - 0).
 VAL=${1:-0}
     echo "Before ....." ; lstune
     for drivename in $(dlist) $(sdlist)
@@ -94,7 +94,7 @@ VAL=${1:-0}
 
 tune_affinity()
 {
-# HELP : Set the requested affinity value to all vexata volumes (default:2).
+# HELP : Set the requested affinity value to all vexata volumes (default - 2).
 VAL=${1:-2}
     echo "Before ....." ; lstune
     for drivename in $(dlist) $(sdlist)
@@ -106,7 +106,7 @@ VAL=${1:-2}
 
 tune_nr()
 {
-# HELP : Increase / decrease the nr_requests on all vexata volumes (default:1024).
+# HELP : Increase / decrease the nr_requests on all vexata volumes (default - 1024).
 VAL=${1:-1024}
     echo "Before ....." ; lstune
     for drivename in $(dlist)
@@ -118,7 +118,7 @@ VAL=${1:-1024}
 
 tune_sched()
 {
-# HELP : set I/O scheduler on all vexata volumes (default: noop)
+# HELP : Set I/O scheduler on all vexata volumes (default - noop)
 VAL=${1:-"noop"}
     echo "Before ....." ; lstune
     for drivename in $(dlist)
@@ -164,13 +164,13 @@ echo "$tf" | awk '/Vexata/ {print $1}' | while read mp; do echo "$mp : $(multipa
 
 dl()
 {
-# HELP : list all dm-X devices with new-line. Usefull to pass on to test tools.
+# HELP : List all dm-X devices with new-line. Usefull to pass on to test tools.
 multipath -l |awk '/Vexata/ {print "/dev/mapper/"$1}'
 }
 
 devlist()
 {
-# HELP : list all dm-X devices with full path name in single line. Usefull to pass on to test tools.
+# HELP : List all dm-X devices with full path name in single line. Usefull to pass on to test tools.
 multipath -l |awk '/Vexata/ {print "/dev/mapper/"$1}' |xargs |sed "s/ /,/g"
 }
 
