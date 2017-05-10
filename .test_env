@@ -219,7 +219,7 @@ done
 
 function vhelp {
 # HELP : List help on all vexata custom test environment modules.
-grep -A2 "()$" .test_env | paste - - - -  | sed 's/()//g; s/{//g; s/. HELP//g; s/--//g'|awk -F: '{printf "%20s :%s\n",$1,$2}'
+grep -A2 "()$" /opt/beetle/.test_env | paste - - - -  | sed 's/()//g; s/{//g; s/. HELP//g; s/--//g'|awk -F: '{printf "%20s :%s\n",$1,$2}'
 }
 
 get_max ()
