@@ -14,6 +14,14 @@ echo "sd=sd${i},lun=/dev/${DN},openflags=o_direct"
 done
 }
 
+vdbgen()
+{
+# HELP : Generate vdbench profiles.
+VDBTEMPLATES=/opt/beetle/opt/vdbench_profiles
+vdblist > /tmp/vdblist.out
+for file in $(ls $VDBTEMPLATES | xargs -n1); do sed -e'/sdXX/r/tmp/vdblist.out' $VDBTEMPLATES/$file > /tmp/$file; done
+}
+
 iochk() 
 {
 # HELP : Generate IOSTAT output for devices with some activity.
