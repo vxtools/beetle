@@ -138,7 +138,7 @@ VAL=${1:-"noop"}
 
 rescan_all()
 {
-# HELP : Rescan all scsi devices asoosiated with FC.
+# HELP : Rescan all scsi devices associated with FC.
 systool -c fc_host  |awk -F\" '/Class D/ {print $2}'| while read HN
 do
 echo $HN;timeout 120 echo "- - -" > /sys/class/scsi_host/$HN/scan
@@ -168,7 +168,6 @@ tf=$(multipath -ll)
 echo "Vexata DMs : $(echo "$tf" | grep Vexata |wc -l)"
 echo "$tf" | awk '/Vexata/ {print $1}' | while read mp; do echo "$mp : $(multipath -l $mp | awk '/^  \|-|^  `/ {print $0}' | wc -l)"; done
 }
-
 
 dl()
 {
@@ -250,7 +249,7 @@ get_hwmax ()
 
 tune_max ()
 {
- # HELP : Set max_sectors_kb value on all vexata volumes.
+# HELP : Set max_sectors_kb value on all vexata volumes.
     echo "Before  : $(get_max)";
     multipath -l | awk '/Vexata/ {print $3}' | xargs -L1 -i echo "echo $1 > /sys/devices/virtual/block/{}/queue/max_sectors_kb" > /tmp/ll;
     multipath -l | awk '/ive undef/ {print $3}' | xargs -L1 -i echo "echo $1 > /sys/class/block/{}/queue/max_sectors_kb" >> /tmp/ll;
