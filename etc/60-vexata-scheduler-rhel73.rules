@@ -1,4 +1,2 @@
 # set noop scheduler and other recommended parameters for vexata disks
-ACTION=="add|change", ENV{ID_MODEL}=="VX01", KERNEL=="sd*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="noop", ATTR{queue/rq_affinity}="2", ATTR{queue/add_random}="0", ATTR{queue/max_sectors_kb}="512"
-ACTION=="add|change", ENV{ID_MODEL}=="VX01", KERNEL=="dm*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="noop", ATTR{queue/rq_affinity}="2", ATTR{queue/add_random}="0", ATTR{queue/max_sectors_kb}="512"
 ACTION=="add|change", ENV{ID_MODEL}=="VX100", KERNEL=="sd*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="noop", ATTR{queue/rq_affinity}="2", ATTR{queue/add_random}="0", ATTR{queue/max_sectors_kb}="512"
