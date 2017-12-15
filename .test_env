@@ -243,9 +243,9 @@ get_hwmax ()
 {
 # HELP : List the max_hw_sectors_kb value on all vexata volumes.
     echo -n "DMs : ";
-    multipath -l | awk '/Vexata/ {print $3}' | xargs -L1 -i cat /sys/devices/virtual/block/{}/queue/max_sectors_kb | xargs;
+    multipath -l | awk '/Vexata/ {print $3}' | xargs -L1 -i cat /sys/devices/virtual/block/{}/queue/max_hw_sectors_kb | xargs;
     echo -n "SDs : ";
-    multipath -l | awk '/ive undef/ {print $3}' | xargs -L1 -i cat /sys/class/block/{}/queue/max_sectors_kb | xargs
+    lsscsi |awk -F \/ '/Vexata/ {print $NF}'|sed "s/ //g" | xargs -L1 -i cat /sys/class/block/{}/queue/max_hw_sectors_kb | xargs
 }
 
 tune_max ()
@@ -253,7 +253,7 @@ tune_max ()
  # HELP : Set max_sectors_kb value on all vexata volumes.
     echo "Before  : $(get_max)";
     multipath -l | awk '/Vexata/ {print $3}' | xargs -L1 -i echo "echo $1 > /sys/devices/virtual/block/{}/queue/max_sectors_kb" > /tmp/ll;
-    multipath -l | awk '/ive undef/ {print $3}' | xargs -L1 -i echo "echo $1 > /sys/class/block/{}/queue/max_sectors_kb" >> /tmp/ll;
+    lsscsi |awk -F \/ '/Vexata/ {print $NF}'|sed "s/ //g" | xargs -L1 -i echo "echo $1 > /sys/class/block/{}/queue/max_sectors_kb" >> /tmp/ll;
     chmod 755 /tmp/ll;
     /tmp/ll; rm -f /tmp/ll
     echo "After  : $(get_max)"
