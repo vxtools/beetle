@@ -236,7 +236,7 @@ get_max ()
     echo -n "DMs : ";
     multipath -l | awk '/Vexata/ {print $3}' | xargs -L1 -i cat /sys/devices/virtual/block/{}/queue/max_sectors_kb | xargs;
     echo -n "SDs : ";
-    multipath -l | awk '/ive undef/ {print $3}' | xargs -L1 -i cat /sys/class/block/{}/queue/max_sectors_kb | xargs
+    lsscsi |awk -F \/ '/Vexata/ {print $NF}'|sed "s/ //g" | xargs -L1 -i cat /sys/class/block/{}/queue/max_sectors_kb | xargs
 }
 
 get_hwmax ()
