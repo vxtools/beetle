@@ -8,8 +8,18 @@
 ####################################################################################
 
 CONF=/tmp/conf
+NULL=/dev/null
+DGSTATE=$(vxcli dg show |awk -F: '/DG State/ {print $NF}'|sed "s/ //g")
+vxcli sa show > $NULL 2>&1 ; SA=$?
 
-[[ ! -d $CONF ]] && { echo "ERROR: Unable to find config backup.... Exiting "; exit 255; }
+function errExit()
+{
+echo "ERROR: $1" ; exit 255
+}
+
+[[ $DGSTATE != "Active" ]] && errExit "Invalid DG State: $DGSTATE .."
+[[ $SA != 0 ]] && errExit "SA is not active. Please activate the SA  .."
+[[ ! -d $CONF ]] && errExit "Unable to find config backup .."
 
 for i in eg vg ig pg volume
 do 
@@ -17,9 +27,7 @@ e=$(vxcli $i list | awk '/^[0-9]/ {t+=1}END{print t}')
 t=$((t+e))
 done
 
-[[ $t -gt 1 ]] && { echo "ERROR: Some Config already exists.. Exiting.. Expected: 1, Recieved: $t"; exit 255; }
-
-vxcli eg list |awk '/^[0-9]/ {t+=1}END{print t}'
+[[ $t -gt 1 ]] && errExit "ERROR: Some Config already exists.. Expected: 1, Recieved: $t"
 
 cd $CONF
 
@@ -51,7 +59,8 @@ do
 
 	VG=($(awk '/VolId/{flag=1;next}/^$/{flag=0}flag' $e | awk '!/----/ {print $NF}'|xargs))
 	v=$(grep -A2 '^VG Info:' $e | awk '/Name:/ {print $NF}')
-	vxcli vg create $v ${VG[@]}
+	vxcli vg show $v > $NULL 2>&1 ; vs=$?
+	[[ $vs != 0 ]] && vxcli vg create $v ${VG[@]}
 
 vxcli eg create $(basename $e .eg)  $v:$i:$p
 done
