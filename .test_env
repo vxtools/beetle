@@ -202,7 +202,7 @@ lsmod |grep qla2xxx >/dev/null 2>&1 ; Q=$?
 check_interrupts()
 {
 # HELP : Check interrupt values on the system.
-awk -F: '/lpfc/ {print $1}' /proc/interrupts | xargs -L1 -i cat /proc/irq/{}/smp_affinity
+awk -F: '/lpfc/ {print $1}' /proc/interrupts | xargs -L1 -i cat /proc/irq/{}/smp_affinity_list
 }
 
 chdev_to()
