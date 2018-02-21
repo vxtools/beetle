@@ -1,0 +1,17 @@
+
+*
+* Profile to measure all four corners
+* sd list needs to be passed on or added to this file explicitly.
+*
+
+* sd=sd1,lun=/dev/dm-XX,openflags=o_direct
+* sd=sd2,lun=/dev/sdXX,openflags=o_direct
+
+wd=wd_reads,sd=sd*,rdpct=100,seekpct=random
+wd=wd_writes,sd=sd*,rdpct=0,seekpct=random
+
+rd=rd_8k_reads,wd=wd_reads,xfersize=8k,iorate=max,elapsed=30,threads=6,interval=5
+rd=rd_8k_writes,wd=wd_writes,xfersize=8k,iorate=max,elapsed=30,threads=6,interval=5
+rd=rd_32k_reads,wd=wd_reads,xfersize=32k,iorate=max,elapsed=30,threads=4,interval=5
+rd=rd_32k_writes,wd=wd_writes,xfersize=32k,iorate=max,elapsed=30,threads=4,interval=5
+
