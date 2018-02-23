@@ -1,0 +1,14 @@
+
+*
+* Profile to write only zeors 
+* sd list needs to be passed on or added to this file explicitly.
+*
+
+pattern=/dev/zero
+
+* sd=sd1,lun=/dev/dm-XX,openflags=o_direct
+* sd=sd2,lun=/dev/sdXX,openflags=o_direct
+
+wd=wd_writes,sd=sd*,rdpct=0,seekpct=eof
+
+rd=rd_32k_writes,wd=wd_writes,xfersize=32k,iorate=max,elapsed=3600,threads=4,interval=1
