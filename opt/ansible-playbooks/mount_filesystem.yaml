@@ -1,0 +1,31 @@
+---
+- hosts: group1
+  tasks:
+  - name: Mount an xfs filesystem and update fstab
+    mount:
+      path: /mnt/xfs1
+      src: /dev/mapper/mapthaa
+      fstype: xfs
+      opts: rw,noatime
+      state: mounted
+  - name: Just update fstab, do not mount the xfs filesystem
+    mount:
+      path: /mnt/xfs2
+      src: LABEL=SOME_LABEL
+      fstype: xfs
+      opts: rw,noatime
+      state: present
+  - name: Just update fstab, do not unmount the xfs filesystem
+    mount:
+      path: /mnt/xfs3
+      src: UUID=c02135fa-af35-4bc3-b57b-cb8942b69c88
+      fstype: xfs
+      opts: rw,noatime
+      state: absent
+  - name: Unmount a xfs filesystem and update fstab
+    mount:
+      path: /mnt/xfs4
+      src: /dev/mapper/mapthad
+      fstype: xfs
+      opts: rw,noatime
+      state: unmounted
