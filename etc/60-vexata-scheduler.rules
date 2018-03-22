@@ -1,3 +1,3 @@
 # set noop scheduler and other recommended parameters for vexata disks
 ACTION=="add|change", ENV{ID_MODEL}=="VX100", KERNEL=="sd*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="noop", ATTR{queue/rq_affinity}="2", ATTR{queue/add_random}="0"
-ACTION=="add|change", PROGRAM="/bin/bash -c 'grep Vexata /sys/block/*/slaves/*/device/vendor'", KERNEL=="dm-*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="noop", ATTR{queue/rq_affinity}="2", ATTR{queue/add_random}="0"
+ACTION=="add|change", ENV{ID_MODEL}=="VX100", KERNEL=="dm*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="noop", ATTR{queue/rq_affinity}="2", ATTR{queue/add_random}="0"
