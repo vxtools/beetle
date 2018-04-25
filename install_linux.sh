@@ -30,8 +30,8 @@ cp -r $MPSRC $MPDIR
 systemctl enable multipathd
 systemctl start multipathd
 else
-printh "multipath software exists, ${RD}PLEASE APPEND${NC} following lines to /etc/multipath.conf ..."
-cat $MPSRC
+[[ -f /etc/multipath.conf ]] &&  { sed -i '/^devices/ r $MPMOD' /etc/multipath.conf  ; }
+printh "Identified old multipath.conf, inserted Vexata Strings...."
 fi
 
 # Installation of FIO
