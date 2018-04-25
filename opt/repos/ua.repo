@@ -1,0 +1,16 @@
+[repo-update]
+gpgcheck=0
+enabled=1
+baseurl=file:///rhel74_repo
+name=repo-update
+[repo-ha]
+gpgcheck=0
+enabled=1
+baseurl=file:///rhel74_repo/addons/HighAvailability
+name=repo-ha
+[repo-storage]
+gpgcheck=0
+enabled=1
+baseurl=file:///rhel74_repo/addons/ResilientStorage
+name=repo-storage
+
